@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
+import { eventChannel } from '@redux-saga/core';
 
 function App() {
   const dispatch = useDispatch();
@@ -12,13 +13,16 @@ function App() {
     setNewElement(event.target.value);
   }
 
+  // moved the axios into the fetchElements in index.js
   const getElements = () => {
-    axios.get('/api/element').then(response => {
-      dispatch({ type: 'SET_ELEMENTS', payload: response.data });
-    })
-      .catch(error => {
-        console.log('error with element get request', error);
-      });
+    dispatch({type: 'FETCH_ELEMENTS'})
+
+    // axios.get('/api/element').then(response => {
+    //   dispatch({ type: 'SET_ELEMENTS', payload: response.data });
+    // })
+    //   .catch(error => {
+    //     console.log('error with element get request', error);
+    //   });
   }
 
   useEffect(() => {
@@ -26,13 +30,16 @@ function App() {
   }, []);
 
   const handleClick = () => {
-    axios.post('/api/element', {newElement}).then(() => {
-      getElements();
-      setNewElement('');
-    })
-      .catch(error => {
-        console.log('error with element get request', error);
-      });
+
+    dispatch({type: 'ADD_ELEMENT', payload: {newElement}})
+
+    // axios.post('/api/element', {newElement}).then(() => {
+    //   getElements();
+    //   setNewElement('');
+    // })
+    //   .catch(error => {
+    //     console.log('error with element get request', error);
+    //   });
 
   }
 
